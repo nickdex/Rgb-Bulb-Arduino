@@ -63,7 +63,7 @@ void setup() {
 }
 
 const size_t bufferSize = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 50;
-StaticJsonBuffer<bufferSize> jsonBuffer;
+DynamicJsonBuffer jsonBuffer(bufferSize);
 
 void subscribeMessage() {
   Serial.println("waiting for a message (subscribe)");
@@ -99,15 +99,16 @@ void subscribeMessage() {
   byte green = value["green"];
   byte blue = value["blue"];
 
-  Serial.println(red);
-  Serial.println(green);
-  Serial.println(blue);
+  analogWrite(RED_PIN, 1023 * red / 255);
+  analogWrite(GREEN_PIN, 1023 * green / 255);
+  analogWrite(BLUE_PIN, 1023 * blue / 255);
+  
 }
 
 void loop() {
 
   subscribeMessage();
 
-  delay(1000);
+  delay(10);
 
 }
