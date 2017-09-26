@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "name": "PlatformIO Debugger",
+            "target": "c:/Users/nikwa/Documents/PlatformIO/Projects/Pubnub-Led/.pioenvs/nodemcuv2/firmware.elf",
+            "gdbpath": "C:/Users/nikwa/.platformio/penv/Scripts/piodebuggdb",
+            "autorun": [ "source .pioinit" ]
+        }
+    ]
+}
