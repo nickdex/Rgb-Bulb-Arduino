@@ -33,6 +33,28 @@ void flash() {
   delay(100);
 }
 
+void checkAndSetInRange(int* color)
+{
+  if (*color < 0) *color = 0;
+  else if (*color > 255) *color = 255;
+}
+
+void setDefaultIfNotInRange(int* red, int* green, int* blue)
+{
+  checkAndSetInRange(red);
+  checkAndSetInRange(green);
+  checkAndSetInRange(blue);
+}
+
+void setLedColors(int red, int green, int blue)
+{
+  setDefaultIfNotInRange(&red, &green, &blue);
+
+  analogWrite(RED_PIN, 1023 * red / 255);
+  analogWrite(GREEN_PIN, 1023 * green / 255);
+  analogWrite(BLUE_PIN, 1023 * blue / 255);
+}
+
 void setup() {
   Serial.begin(9600);
   delay(10);
@@ -95,19 +117,12 @@ void subscribeMessage() {
       return;
   }
 
-  byte red = value["red"];
-  byte green = value["green"];
-  byte blue = value["blue"];
+  int red = value["red"];
+  int green = value["green"];
+  int blue = value["blue"];
 
   setLedColors(red, green, blue);
   
-}
-
-void setLedColors(int red, int green, int blue)
-{
-  analogWrite(RED_PIN, 1023 * red / 255);
-  analogWrite(GREEN_PIN, 1023 * green / 255);
-  analogWrite(BLUE_PIN, 1023 * blue / 255);
 }
 
 void loop() {
