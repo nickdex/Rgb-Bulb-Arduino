@@ -99,10 +99,15 @@ void subscribeMessage() {
   byte green = value["green"];
   byte blue = value["blue"];
 
+  setLedColors(red, green, blue);
+  
+}
+
+void setLedColors(int red, int green, int blue)
+{
   analogWrite(RED_PIN, 1023 * red / 255);
   analogWrite(GREEN_PIN, 1023 * green / 255);
   analogWrite(BLUE_PIN, 1023 * blue / 255);
-  
 }
 
 void loop() {
