@@ -13,9 +13,6 @@ const char *password = "simple#9";
 #define GREEN_PIN 4
 #define RED_PIN 2
 
-#define COLOR_COUNT 27
-#define PARTITION 5
-
 char pubkey[] = "pub-c-a7a7bf57-7428-4acf-9feb-95aa76439442";
 char subkey[] = "sub-c-28e8300e-7e94-11e7-a179-1e66dc778462";
 char channel[] = "pi-house";
@@ -62,16 +59,6 @@ void setLedColors(int red, int green, int blue)
     analogWrite(BLUE_PIN, 1023 * blue / 255);
 }
 
-RGB colorConverter(int hexValue)
-{
-    struct RGB rgbColor;
-    rgbColor.r = ((hexValue >> 16) & 0xFF) / 255.0; // Extract the RR byte
-    rgbColor.g = ((hexValue >> 8) & 0xFF) / 255.0;  // Extract the GG byte
-    rgbColor.b = ((hexValue)&0xFF) / 255.0;         // Extract the BB byte
-
-    return rgbColor;
-}
-
 // Set initial color
 int redVal = 0;
 int grnVal = 0;
@@ -82,7 +69,7 @@ int prevR = redVal;
 int prevG = grnVal;
 int prevB = bluVal;
 
-int wait = 10;      // 10ms internal crossFade delay; increase for slower fades
+int wait = 5;      // 10ms internal crossFade delay; increase for slower fades
 int hold = 0;       // Optional hold when a color is complete, before the next crossFade
 int DEBUG = 1;      // DEBUG counter; if set to 1, will write values back via serial
 int loopCount = 60; // How often should DEBUG report?
@@ -167,86 +154,20 @@ void crossFade(struct RGB color)
     delay(hold); // Pause for optional 'wait' milliseconds before resuming the loop
 }
 
-RGB colors[COLOR_COUNT];
-
-int incrementColor(int step)
-{
-    return 26 * 3 * step;
-}
-
-void buildColorSwatch()
-{
-    /*
-    {
-        0xFF0000, 0x00FF00, 0x0000FF, // Basic Colors
-        0xFF1A00, 0xFF4D00, 0xFF8000, // Full Red + Green
-        0x00FF1A, 0x00FF33, 0x00FF80, 0x00FF33, // Full Green + Blue
-        0xFF001A, 0xFF004D, 0xFF0099 // Full Red + Blue
-        0x0080FF, // Full Blue + Green
-        0x1A00FF, // Full Blue + Red
-        0x00FFFF, 0xFFFF00, 0xFF00FF, // 2 Full Colors
-    }
-    */
-
-    int i = 0, partition = 3, set = 1;
-    // Full Red + Green
-    for (int j = 0; j < partition * set; j++, i++)
-    {
-        colors[i].r = 255;
-        colors[i].g = incrementColor(j);
-    }
-
-    // Full Green + Red
-    for (int j = 0; j < partition * set; j++, i++)
-    {
-        colors[i].g = 255;
-        colors[i].r = incrementColor(j);
-    }
-
-    // Full Red + Blue
-    for (int j = 0; j < partition * set; j++, i++)
-    {
-        colors[i].r = 255;
-        colors[i].b = incrementColor(j);
-    }
-
-    // Full Blue + Red
-    for (int j = 0; j < partition * set; j++, i++)
-    {
-        colors[i].r = 255;
-        colors[i].b = incrementColor(j);
-    }
-
-    // Full Green + Blue
-    for (int j = 0; j < partition * set; j++, i++)
-    {
-        colors[i].r = 255;
-        colors[i].b = incrementColor(j);
-    }
-
-    // Full Blue + Green
-    for (int j = 0; j < partition * set; j++, i++)
-    {
-        colors[i].r = 255;
-        colors[i].b = incrementColor(j);
-    }
-
-    colors[i].r = 255;
-    colors[i].b = 255;
-    i++;
-
-    colors[i].r = 255;
-    colors[i].g = 255;
-    i++;
-
-    colors[i].g = 255;
-    colors[i].b = 255;
-}
-
 void startCrossfade()
 {
-    buildColorSwatch();
-    for(int idx=0; idx<COLOR_COUNT; idx++) crossFade(colors[idx]);
+    RGB red; 
+    red.r=255; red.g=0; red.b=0;
+
+    RGB green; 
+    green.g=255; green.b=0; green.r=0;
+
+    RGB blue;
+    blue.b=255;blue.g=0; blue.r=0;
+
+    crossFade(green);
+    crossFade(red);
+    crossFade(blue);
 }
 
 void setup()
@@ -328,8 +249,8 @@ void subscribeMessage()
 
 void loop()
 {
-
     //subscribeMessage();
     startCrossfade();
+
     delay(10);
 }
