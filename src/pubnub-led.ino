@@ -249,7 +249,6 @@ void subscribeMessage()
 void loop()
 {
     //subscribeMessage();
-
     startCrossfade();
     
     delay(10);
